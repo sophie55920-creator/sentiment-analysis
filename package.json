@@ -5,6 +5,7 @@
   "description": "Weekends Sentiment Lab - 감성 분석 인터랙티브 웹 서비스",
   "main": "server.js",
   "scripts": {
+    "build": "echo 'No build step required'",
     "dev": "node server.js",
     "start": "node server.js",
     "vercel-dev": "vercel dev"
