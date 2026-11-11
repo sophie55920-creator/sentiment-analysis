@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekends Sentiment Lab | 감성 분석 연구소</title>
+  
+  <!-- 폰트 불러오기: Poppins(헤더/로고 영문) & Pretendard(한국어 본문) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- 커스텀 스타일시트 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 1. 배경 파티클 애니메이션 캔버스 (떠다니는 기하학 도형들) -->
+  <canvas id="particle-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- 2. 상단 헤더 영역 -->
+    <header class="site-header">
+      <div class="header-inner">
+        <!-- 브랜드 로고 -->
+        <a href="#" class="brand-logo" aria-label="Sentiment Lab 홈으로 이동">
+          <span class="logo-symbol">✦</span>
+          <span class="logo-text">Sentiment Lab.</span>
+        </a>
+
+        <!-- 네비게이션 메뉴 (데스크톱/태블릿) -->
+        <nav class="nav-links">
+          <a href="#about" class="nav-item">About</a>
+          <a href="#analysis" class="nav-item active">Analysis</a>
+          <a href="#docs" class="nav-item">Docs</a>
+          <a href="#contact" class="nav-item">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 3. 메인 콘텐츠 영역 -->
+    <main class="main-content" id="analysis">
+      <!-- 히어로 타이틀 영역 -->
+      <section class="hero-section">
+        <span class="sub-badge">AI Driven Insight</span>
+        <h1 class="hero-title">Feelings.</h1>
+        <p class="hero-subtitle">
+          마음속 문장을 들려주세요. 감각적인 인공지능이 숨은 감정과 뉘앙스를 정밀하게 분석합니다.
+        </p>
+      </section>
+
+      <!-- 감성 분석 입력 폼 (글래스모피즘 카드) -->
+      <section class="interactive-card glass-panel">
+        <form id="sentiment-form" class="sentiment-form">
+          <div class="input-wrapper">
+            <textarea
+              id="text-input"
+              class="text-input"
+              rows="3"
+              placeholder="오늘 있었던 일이나 지금 떠오르는 생각을 적어보세요... (최소 2자 이상)"
+              maxlength="1000"
+              required
+            ></textarea>
+            <div class="char-counter">
+              <span id="char-count">0</span> / 1000
+            </div>
+          </div>
+
+          <!-- 액션 컨트롤 (버튼 및 단축키 힌트) -->
+          <div class="form-actions">
+            <span class="shortcut-tip">Tip: Ctrl + Enter 또는 버튼 클릭</span>
+            <button type="submit" id="analyze-btn" class="analyze-btn">
+              <span class="btn-text">감성 분석하기</span>
+              <span class="btn-spinner" id="btn-spinner" aria-hidden="true"></span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- 알림/오류 메시지 배너 (기본은 숨김) -->
+        <div id="alert-banner" class="alert-banner" role="alert" style="display: none;">
+          <span class="alert-icon">⚠️</span>
+          <span id="alert-message" class="alert-message">오류 메시지가 표시됩니다.</span>
+        </div>
+
+        <!-- 감성 분석 결과 카드 (분석 성공 시 표시) -->
+        <div id="result-card" class="result-card" style="display: none;">
+          <div class="result-header">
+            <div class="result-meta">
+              <span class="result-label">판별된 감성</span>
+              <!-- 감성 태그 뱃지: positive / negative / neutral -->
+              <span id="sentiment-badge" class="sentiment-badge">긍정 (Positive)</span>
+            </div>
+            
+            <div class="confidence-box">
+              <div class="confidence-header">
+                <span class="confidence-title">신뢰도</span>
+                <span id="confidence-percent" class="confidence-percent">0%</span>
+              </div>
+              <!-- 신뢰도 시각화 바 -->
+              <div class="progress-track">
+                <div id="confidence-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-body">
+            <h3 class="reason-title">분석 근거</h3>
+            <p id="reasoning-text" class="reasoning-text">
+              문맥에서 느껴지는 기쁨과 만족감이 긍정적인 감정으로 분류되었습니다.
+            </p>
+          </div>
+
+          <div class="result-footer">
+            <span id="timestamp-text" class="timestamp-text">2026-11-10 15:30:00</span>
+            <button type="button" id="reset-btn" class="reset-btn">새로운 문장 분석하기</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 4. 하단 푸터 영역 -->
+    <footer class="site-footer">
+      <p>© 2026 Weekends Sentiment Lab. Built with OpenAI & Supabase.</p>
+    </footer>
+
+    <!-- 5. 플로팅 상단 이동 버튼 -->
+    <button id="scroll-top-btn" class="floating-btn" aria-label="페이지 상단으로 이동">
+      ↑
+    </button>
+  </div>
+
+  <!-- 파티클 배경 엔진 스크립트 -->
+  <script src="js/particles.js"></script>
+  <!-- UI 인터랙션 및 API 호출 스크립트 -->
+  <script src="js/app.js"></script>
+</body>
+</html>
+
